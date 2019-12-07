@@ -145,7 +145,7 @@ namespace WpfApp1
             try
             {
                 pTTS.SetOutputToDefaultAudioDevice();
-                pTTS.Speak("Witam w pizzomacie");
+                pTTS.Speak("Witam w pizzerii");
                 // Ustawienie języka rozpoznawania:
                 CultureInfo ci = new CultureInfo("pl-PL");
                 // Utworzenie "silnika" rozpoznawania:
@@ -234,7 +234,7 @@ namespace WpfApp1
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            pTTS.SpeakAsync("do usłyszenia");
+            //pTTS.SpeakAsync("do usłyszenia");
             System.Windows.Application.Current.Shutdown();
         }
     }
