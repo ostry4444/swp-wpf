@@ -35,7 +35,8 @@ namespace WpfApp1
 
         string[] sizes = new string[] { "mała", "średnia", "duża", "małą", "średnią", "dużą" }; // pizza / pizzę
         string[] thickness = new string[] { "cienkim", "średnim", "grubym", "cienkie", "średnie", "grube" }; // cieście / ciasto
-        string[] addons = new string[] { "ananas", "ser", "pieczarki", "ananasem", "serem", "pieczarkami" };  // / z ...
+        string[] addons = new string[] { "ananas", "ser", "pieczarki", "kurczak", "cebula", 
+                                         "ananasem", "serem", "pieczarkami", "kurczakiem","cebulą" };
 
         String oSize = "";
         String oThick = "";
@@ -54,92 +55,25 @@ namespace WpfApp1
             //backgroundWorker.ProgressChanged += backgroundWorker_ProgressChanged;
             backgroundWorker.WorkerReportsProgress = true;
             backgroundWorker.RunWorkerAsync();
-        }
 
-        private void PSRE_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
+            initButtons();
+        }
+        void initButtons()
         {
-            string txt = e.Result.Text;
-            string comments;
-            float confidence = e.Result.Confidence;
-            comments = String.Format("ROZPOZNANO (wiarygodność: {0:0.000}): '{1}'",
-            e.Result.Confidence, txt);
-            Console.WriteLine(comments);
-            if (confidence > 0.20)
-            {
-                if (txt.IndexOf("Stop") >= 0)
-                {
-                    speechOn = false;
-                }
-                else if (txt.IndexOf("Pomoc") >= 0)
-                {
-                    pTTS.SpeakAsync("Składnia polecenia: ...");
+            a1.Content = addons[0];
+            a2.Content = addons[1];
+            a3.Content = addons[2];
+            a4.Content = addons[3];
+            a5.Content = addons[4];
 
-                }
-                else if ((txt.IndexOf("Dziękuję") >= 0) && speechOn == true)
-                {
-                    oSize = oThick = oAdd = oAdd2 = oAdd3 ="";
-                    this.Dispatcher.BeginInvoke(new Action(() => {
-                        tb1.Text = "";
-                        tb2.Text = "";
-                        tb3.Text = "";;
-                    }));
-                    Console.WriteLine("zamówiono ");
-                }
-                else if ((txt.IndexOf("Poproszę") >= 0) && speechOn == true) 
-                {
-                    try
-                    {
-                        oSize = (String)e.Result.Semantics["size"].Value;
-                    } catch (Exception ex){ }
-
-                    try { 
-                        oThick = (String) e.Result.Semantics["thickness"].Value;
-                    }
-                    catch (Exception ex) { }
-
-                    try {
-                        oAdd = (String) e.Result.Semantics["addons"]?.Value; 
-                        oAdd2 = (String) e.Result.Semantics["addons2"].Value;
-                        oAdd3 = (String) e.Result.Semantics["addons3"].Value;
-                    }
-                    catch (Exception ex) { }
-                    /*
-                    if (oThick.Length == 0){ //ask 
-                        pTTS.SpeakAsync("jaka grubość?");
-                        
-                    }*/
-
-                    this.Dispatcher.BeginInvoke(new Action(() => {
-                        tb1.Text = oSize;
-                        tb2.Text = oThick;
-                        tb3.Text = oAdd;
-                        // Ulgowy.Visibility = Visibility.Hidden;
-                        // Normalny.Visibility = Visibility.Visible;
-                    }));
-
-
-                    Console.WriteLine("zamówiono " + oSize + " pizze " + oThick + " ciasto " + oAdd + " i " + oAdd2);
-                    pTTS.SpeakAsync("zamówiono " + oSize + " pizze " + oThick + " ciasto " + oAdd + " i " + oAdd2);
-                }
-                else if (true) // ask
-                {/*
-                    if (oSize == "")
-                    {
-                        oSize = e.Result.Semantics["addons"]?.Value;
-                    }*/
-                }
-                
-
-            }
-            else {
-                comments = String.Format("\tNISKI WSPÓŁCZYNNIK WIARYGODNOŚCI - powtórz polecenie");
-                Console.WriteLine(comments);
-                pTTS.SpeakAsync("Proszę powtórzyć");
-            }
-
+            a11.Content = "2x " + addons[0];
+            a22.Content = "2x " + addons[1];
+            a33.Content = "2x " + addons[2];
+            a44.Content = "2x " + addons[3];
+            a55.Content = "2x " + addons[4];
         }
 
- 
+        
         private void backgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             try
@@ -227,15 +161,213 @@ namespace WpfApp1
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void PSRE_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
-            pTTS.SpeakAsync("baton");
+            string txt = e.Result.Text;
+            string comments;
+            float confidence = e.Result.Confidence;
+            comments = String.Format("ROZPOZNANO (wiarygodność: {0:0.000}): '{1}'",
+            e.Result.Confidence, txt);
+            Console.WriteLine(comments);
+            if (confidence > 0.20)
+            {
+                if (txt.IndexOf("Stop") >= 0)
+                {
+                    speechOn = false;
+                }
+                else if (txt.IndexOf("Pomoc") >= 0)
+                {
+                    pTTS.SpeakAsync("Składnia polecenia: ...");
+
+                }
+                else if ((txt.IndexOf("Dziękuję") >= 0) && speechOn == true)
+                {
+                    oSize = oThick = oAdd = oAdd2 = oAdd3 = "";
+                    this.Dispatcher.BeginInvoke(new Action(() => {
+                       // TODO: click() buttons according to order
+                    }));
+                    Console.WriteLine("zamówiono ");
+                    //confirm_Click(null,null);
+                }
+                else if ((txt.IndexOf("Poproszę") >= 0) && speechOn == true)
+                {
+                    try
+                    {
+                        oSize = (String)e.Result.Semantics["size"].Value;
+                    }
+                    catch (Exception ex) { }
+
+                    try
+                    {
+                        oThick = (String)e.Result.Semantics["thickness"].Value;
+                    }
+                    catch (Exception ex) { }
+
+                    try
+                    {
+                        oAdd = (String)e.Result.Semantics["addons"]?.Value;
+                        oAdd2 = (String)e.Result.Semantics["addons2"].Value;
+                        oAdd3 = (String)e.Result.Semantics["addons3"].Value;
+                    }
+                    catch (Exception ex) { }
+                    /*
+                    if (oThick.Length == 0){ //ask 
+                        pTTS.SpeakAsync("jaka grubość?");
+                        
+                    }*/
+
+                    this.Dispatcher.BeginInvoke(new Action(() => {
+                        
+                        // TODO: click() buttons according to order
+                    }));
+
+
+                    Console.WriteLine("zamówiono " + oSize + " pizze " + oThick + " ciasto " + oAdd + " i " + oAdd2);
+                    pTTS.SpeakAsync("zamówiono " + oSize + " pizze " + oThick + " ciasto " + oAdd + " i " + oAdd2);
+                }
+                else if (true) // ask
+                {/*
+                    if (oSize == "")
+                    {
+                        oSize = e.Result.Semantics["addons"]?.Value;
+                    }*/
+                }
+
+
+            }
+            else
+            {
+                comments = String.Format("\tNISKI WSPÓŁCZYNNIK WIARYGODNOŚCI - powtórz polecenie");
+                Console.WriteLine(comments);
+                pTTS.SpeakAsync("Proszę powtórzyć");
+            }
+
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+
+        private void confirm_Click(object sender, RoutedEventArgs e)
         {
-            //pTTS.SpeakAsync("do usłyszenia");
+            pTTS.SpeakAsync("confirm");
+            //order confirmation
+        }
+
+        private void newOrder_Click(object sender, RoutedEventArgs e)
+        {
+            pTTS.SpeakAsync("newOrder");
+            oSize = oThick = oAdd = oAdd2 = oAdd3= "";
+
+            s1.IsEnabled = s2.IsEnabled = s3.IsEnabled = true;
+            t1.IsEnabled = t2.IsEnabled = t3.IsEnabled = true;
+            a1.IsEnabled = a2.IsEnabled = a3.IsEnabled = a4.IsEnabled = a5.IsEnabled = true;
+            a11.IsEnabled = a22.IsEnabled = a33.IsEnabled = a44.IsEnabled = a55.IsEnabled = true;
+            
+            s1.Background = s2.Background = s3.Background = Brushes.LightGray;
+            t1.Background = t2.Background = t3.Background = Brushes.LightGray;
+            a1.Background = a2.Background = a3.Background = a4.Background = a5.Background = Brushes.LightGray;
+            a11.Background = a22.Background = a33.Background = a44.Background = a55.Background = Brushes.LightGray;
+        }
+
+        private void exit_Click(object sender, RoutedEventArgs e)
+        {
             System.Windows.Application.Current.Shutdown();
         }
+
+        private void s1_Click(object sender, RoutedEventArgs e)
+        {
+            s1.Background = Brushes.LightGreen;
+            s2.IsEnabled = false;
+            s3.IsEnabled = false;
+        }
+
+        private void s2_Click(object sender, RoutedEventArgs e)
+        {
+            s1.IsEnabled = false;
+            s2.Background = Brushes.LightGreen; 
+            s3.IsEnabled = false;
+        }
+
+        private void s3_Click(object sender, RoutedEventArgs e)
+        {
+            s1.IsEnabled = false;
+            s2.IsEnabled = false;
+            s3.Background = Brushes.LightGreen;
+        }
+
+        private void t1_Click(object sender, RoutedEventArgs e)
+        {
+            t1.Background = Brushes.LightGreen;
+            t2.IsEnabled = false;
+            t3.IsEnabled = false;
+        }
+
+        private void t2_Click(object sender, RoutedEventArgs e)
+        {
+            t1.IsEnabled = false;
+            t2.Background = Brushes.LightGreen; 
+            t3.IsEnabled = false;
+        }
+
+        private void t3_Click(object sender, RoutedEventArgs e)
+        {
+            t1.IsEnabled = false;
+            t2.IsEnabled = false;
+            t3.Background = Brushes.LightGreen;
+        }
+
+        private void a1_Click(object sender, RoutedEventArgs e)
+        {
+            a1.Background = Brushes.LightGreen;
+            a11.IsEnabled = false;
+        }
+        private void a11_Click(object sender, RoutedEventArgs e)
+        {
+            a11.Background = Brushes.LightGreen;
+            a1.IsEnabled = false;
+        }
+
+        private void a2_Click(object sender, RoutedEventArgs e)
+        {
+            a2.Background = Brushes.LightGreen;
+            a22.IsEnabled = false;
+        }
+        private void a22_Click(object sender, RoutedEventArgs e)
+        {
+            a22.Background = Brushes.LightGreen;
+            a2.IsEnabled = false;
+        }
+
+        private void a3_Click(object sender, RoutedEventArgs e)
+        {
+            a3.Background = Brushes.LightGreen;
+            a33.IsEnabled = false;
+        }
+        private void a33_Click(object sender, RoutedEventArgs e)
+        {
+            a33.Background = Brushes.LightGreen;
+            a3.IsEnabled = false;
+        }
+
+        private void a4_Click(object sender, RoutedEventArgs e)
+        {
+            a4.Background = Brushes.LightGreen;
+            a44.IsEnabled = false;
+        }
+        private void a44_Click(object sender, RoutedEventArgs e)
+        {
+            a44.Background = Brushes.LightGreen;
+            a4.IsEnabled = false;
+        }
+
+        private void a5_Click(object sender, RoutedEventArgs e)
+        {
+            a5.Background = Brushes.LightGreen;
+            a55.IsEnabled = false;
+        }
+        private void a55_Click(object sender, RoutedEventArgs e)
+        {
+            a55.Background = Brushes.LightGreen;
+            a5.IsEnabled = false;
+        }
+
     }
 }
