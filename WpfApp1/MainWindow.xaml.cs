@@ -16,7 +16,8 @@ namespace WpfApp1
         static SpeechSynthesizer pTTS = new SpeechSynthesizer();
         static SpeechRecognitionEngine pSRE;
 
-        int sizesN , thicknessN = 3;
+        int sizesN = 3;
+        int thicknessN = 3;
         int addonsN = 5;
         string[] sizes = new string[] { "mała", "średnia", "duża", "małą", "średnią", "dużą" }; // pizza / pizzę
         string[] thickness = new string[] { "cienkie", "średnie", "grube", "cienkim", "średnim", "grubym" }; // cieście / ciasto
@@ -27,7 +28,11 @@ namespace WpfApp1
         String oSize = "";
         String oThick = "";
         bool dA1, dA2, dA3, dA4, dA5 = false;
-        String oAdd1, oAdd2, oAdd3, oAdd4, oAdd5 = "";
+        String oAdd1 = "";
+        String oAdd2 = "";
+        String oAdd3 = "";
+        String oAdd4 = "";
+        String oAdd5 = "";
 
         private readonly BackgroundWorker backgroundWorker = new BackgroundWorker();
 
@@ -103,7 +108,7 @@ namespace WpfApp1
                 GrammarBuilder grammarPizza = new GrammarBuilder();
                 //grammarPizza.Append("Poproszę");
                 grammarPizza.Append("Poproszę", 0, 1);
-                grammarPizza.Append(new SemanticResultKey("sizes", chSizes), 0, 1);
+                grammarPizza.Append(new SemanticResultKey("size", chSizes), 0, 1);
                 grammarPizza.Append("pizzę", 0, 1);
 
                 grammarPizza.Append("na", 0, 1);
@@ -167,7 +172,7 @@ namespace WpfApp1
                 {
                     Console.WriteLine("oSize: " + oSize + " oThick: " + oThick + " Add: " + (dA1 ? " 2x" : " ") + oAdd1 + (dA2 ? " 2x" : " ") + oAdd2 +
                                         (dA3 ? " 2x" : " ") + oAdd3 + (dA4 ? " 2x" : " ") + oAdd4 + (dA5 ? " 2x" : " ") + oAdd5); 
-                    pTTS.SpeakAsync("zamówiono " + oSize + " pizze " + oThick + " ciasto z: " + (dA1 ? " 2x" : " ") + oAdd1 + (dA2 ? " 2x" : " ") + oAdd2 +
+                    pTTS.SpeakAsync("zamówiono " + oSize + " pizze " + oThick + " ciasto z " + (dA1 ? " 2x" : " ") + oAdd1 + (dA2 ? " 2x" : " ") + oAdd2 +
                                         (dA3 ? " 2x" : " ") + oAdd3 + (dA4 ? " 2x" : " ") + oAdd4 + (dA5 ? " 2x" : " ") + oAdd5);
 
                     this.Dispatcher.BeginInvoke(new Action(() => {
@@ -180,24 +185,31 @@ namespace WpfApp1
                 }
                 else if ((txt.IndexOf("Poproszę") >= 0) && speechOn == true)
                 {
-                    try {
+                    try
+                    {
                         oSize = (String)e.Result.Semantics["size"].Value;
-                        if (oSize != "") setSize(oSize);
+                        if (oSize != "")
+                            this.Dispatcher.BeginInvoke(new Action(() => {
+                                setSize(oSize);
+                            }));
                     }
                     catch (Exception ex) { }
 
                     try {
                         oThick = (String)e.Result.Semantics["thickness"].Value;
-                        if (oThick!="") setThickness(oThick);
+                        if (oThick != "")
+                            this.Dispatcher.BeginInvoke(new Action(() => {
+                                setThickness(oThick);
+                            }));
                     }
                     catch (Exception ex) { }
 
                     try {
-                        oAdd1 = (String)e.Result.Semantics["addons"].Value;
-                        oAdd2 = (String)e.Result.Semantics["addons2"].Value;
-                        oAdd3 = (String)e.Result.Semantics["addons3"].Value;
-                        oAdd4 = (String)e.Result.Semantics["addons4"].Value;
-                        oAdd5 = (String)e.Result.Semantics["addons5"].Value;
+                        oAdd1 = (String)e.Result.Semantics["add1"].Value;
+                        oAdd2 = (String)e.Result.Semantics["add2"].Value;
+                        oAdd3 = (String)e.Result.Semantics["add3"].Value;
+                        oAdd4 = (String)e.Result.Semantics["add4"].Value;
+                        oAdd5 = (String)e.Result.Semantics["add5"].Value;
 
                         if (e.Result.Semantics["dA1"].Value != null) dA1 = true;
                         if (e.Result.Semantics["dA2"].Value != null) dA2 = true;
@@ -205,11 +217,23 @@ namespace WpfApp1
                         if (e.Result.Semantics["dA4"].Value != null) dA4 = true;
                         if (e.Result.Semantics["dA5"].Value != null) dA5 = true;
 
-                        if (oAdd1 != "") setAdd(oAdd1, dA1);
-                        if (oAdd2 != "") setAdd(oAdd1, dA2);
-                        if (oAdd3 != "") setAdd(oAdd1, dA3);
-                        if (oAdd4 != "") setAdd(oAdd1, dA4);
-                        if (oAdd5 != "") setAdd(oAdd1, dA5);
+                        //TODO
+                        if (oAdd1 != "") this.Dispatcher.BeginInvoke(new Action(() => {
+                            setAdd(oAdd1, dA1);
+                        }));
+                        if (oAdd2 != "") this.Dispatcher.BeginInvoke(new Action(() => {
+                            setAdd(oAdd1, dA2);
+                        }));
+                        if (oAdd3 != "") this.Dispatcher.BeginInvoke(new Action(() => {
+                            setAdd(oAdd1, dA3);
+                        }));
+                        if (oAdd4 != "") this.Dispatcher.BeginInvoke(new Action(() => {
+                            setAdd(oAdd1, dA4);
+                        }));
+                        if (oAdd5 != "") this.Dispatcher.BeginInvoke(new Action(() => {
+                            setAdd(oAdd1, dA5);
+                        }));
+
                     }
                     catch (Exception ex) { }
                    
@@ -235,14 +259,27 @@ namespace WpfApp1
                 {
                     if (oSize.Equals(""))
                     {
-                        oSize = (String)e.Result.Semantics["size"].Value;
-                        if (oSize != "") setSize(oSize);
+                        try {
+                            oSize = (String) e.Result.Semantics["size"].Value;
+                            if (oSize != "")
+                                this.Dispatcher.BeginInvoke(new Action(() => {
+                                    setSize(oSize);
+                                }));
+                        }
+                        catch (Exception ex) { }
                     }
                     else
                         if (oThick.Equals(""))
                         {
-                        oThick = (String) e.Result.Semantics["thickness"].Value;
-                        if (oThick != "") setThickness(oThick);
+                            try { 
+                                oThick = (String) e.Result.Semantics["thickness"].Value;
+                            if (oThick != "")
+                                this.Dispatcher.BeginInvoke(new Action(() =>
+                                {
+                                    setThickness(oThick);
+                                }));
+                            }
+                            catch (Exception ex) { }
                     }
 
                     if (oSize=="")                    
@@ -261,11 +298,11 @@ namespace WpfApp1
 
         }
 
-        private void setSize(String size)
+        private void setSize(String si)
         {
             for (int i = 0; i < sizes.Length; i++)
             {
-                if (size.Equals(size[i])) 
+                if (si.Equals(sizes[i])) 
                 { 
                     switch (i % sizesN)
                     {
