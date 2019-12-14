@@ -1,31 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Microsoft.Speech.Recognition;
 using Microsoft.Speech.Synthesis;
 using System.Globalization;
 using System.ComponentModel;
-using System.Threading;
 
 namespace WpfApp1
 {
-    /// <summary>
-    /// Logika interakcji dla klasy MainWindow.xaml
-    /// </summary>
-    /// 
-   
-
+  
     public partial class MainWindow : Window
     {
 
@@ -33,16 +16,18 @@ namespace WpfApp1
         static SpeechSynthesizer pTTS = new SpeechSynthesizer();
         static SpeechRecognitionEngine pSRE;
 
+        int sizesN , thicknessN = 3;
+        int addonsN = 5;
         string[] sizes = new string[] { "mała", "średnia", "duża", "małą", "średnią", "dużą" }; // pizza / pizzę
-        string[] thickness = new string[] { "cienkim", "średnim", "grubym", "cienkie", "średnie", "grube" }; // cieście / ciasto
+        string[] thickness = new string[] { "cienkie", "średnie", "grube", "cienkim", "średnim", "grubym" }; // cieście / ciasto
+        string[] doubbler = new string[] { "podwójnym", "podwójnymi", "podwójną", "dwa razy" };
         string[] addons = new string[] { "ananas", "ser", "pieczarki", "kurczak", "cebula", 
                                          "ananasem", "serem", "pieczarkami", "kurczakiem","cebulą" };
 
         String oSize = "";
         String oThick = "";
-        String oAdd = "";
-        String oAdd2 = "";
-        String oAdd3 = "";
+        bool dA1, dA2, dA3, dA4, dA5 = false;
+        String oAdd1, oAdd2, oAdd3, oAdd4, oAdd5 = "";
 
         private readonly BackgroundWorker backgroundWorker = new BackgroundWorker();
 
@@ -50,9 +35,7 @@ namespace WpfApp1
         {
             InitializeComponent();
 
-            //InitializeBackgroundWorker();
             backgroundWorker.DoWork += backgroundWorker_DoWork;
-            //backgroundWorker.ProgressChanged += backgroundWorker_ProgressChanged;
             backgroundWorker.WorkerReportsProgress = true;
             backgroundWorker.RunWorkerAsync();
 
@@ -60,6 +43,14 @@ namespace WpfApp1
         }
         void initButtons()
         {
+            s1.Content = sizes[0];
+            s2.Content = sizes[1];
+            s3.Content = sizes[2];
+
+            t1.Content = thickness[0];
+            t2.Content = thickness[1];
+            t3.Content = thickness[2];
+
             a1.Content = addons[0];
             a2.Content = addons[1];
             a3.Content = addons[2];
@@ -80,11 +71,8 @@ namespace WpfApp1
             {
                 pTTS.SetOutputToDefaultAudioDevice();
                 pTTS.Speak("Witam w pizzerii");
-                // Ustawienie języka rozpoznawania:
                 CultureInfo ci = new CultureInfo("pl-PL");
-                // Utworzenie "silnika" rozpoznawania:
                 pSRE = new SpeechRecognitionEngine(ci);
-                // Ustawienie domyślnego urządzenia wejściowego:
                 pSRE.SetInputToDefaultAudioDevice();
                 // Przypisanie obsługi zdarzenia realizowanego po rozpoznaniu wypowiedzi zgodnej z gramatyką:
                 pSRE.SpeechRecognized += PSRE_SpeechRecognized; // TAB   PSRE_SpeechRecognized;
@@ -94,33 +82,27 @@ namespace WpfApp1
                 Choices stopChoice = new Choices();
                 stopChoice.Add("Stop");
                 stopChoice.Add("Pomoc");
+                stopChoice.Add("Dziękuję");
                 // Budowa gramatyki numer 1 - definiowanie składni gramatyki:
                 GrammarBuilder buildGrammarSystem = new GrammarBuilder();
                 buildGrammarSystem.Append(stopChoice);
                 // Budowa gramatyki numer 1 - utworzenie gramatyki:
-                Grammar grammarSystem = new Grammar(buildGrammarSystem); //
-                                                                         // -------------------------------------------------------------------------
-                                                                         // Budowa gramatyki numer 2 - POLECENIA DLA PROGRAMU
-                                                                         // Budowa gramatyki numer 2 - określenie komend:
-                
-                // poproszę / chce zamówić /.. pizzę
-                // rozmiar (mała/ duża /średnia)
-                // na (cienkim/ średnim/ grubym) cieście
-                // * dodatki ...
+                Grammar grammarSystem = new Grammar(buildGrammarSystem);
 
+               
                 Choices chSizes = new Choices();
-                chSizes.Add(sizes);
-
+                    chSizes.Add(sizes);
                 Choices chThickness = new Choices();
-                chThickness.Add(thickness);
-
+                    chThickness.Add(thickness);
+                Choices chDouble = new Choices();
+                    chDouble.Add(doubbler);
                 Choices chAddons = new Choices();
-                chAddons.Add(addons);
+                    chAddons.Add(addons);
 
 
                 GrammarBuilder grammarPizza = new GrammarBuilder();
-                grammarPizza.Append("Poproszę");
-               // grammarPizza.Append("Poproszę", 0,1);
+                //grammarPizza.Append("Poproszę");
+                grammarPizza.Append("Poproszę", 0, 1);
                 grammarPizza.Append(new SemanticResultKey("sizes", chSizes), 0, 1);
                 grammarPizza.Append("pizzę", 0, 1);
 
@@ -130,29 +112,33 @@ namespace WpfApp1
 
                 grammarPizza.Append("z", 0, 1);
 
-                grammarPizza.Append(new SemanticResultKey("addons", chAddons), 0, 1);
+                grammarPizza.Append(new SemanticResultKey("dA1", chDouble), 0, 1);
+                grammarPizza.Append(new SemanticResultKey("add1", chAddons), 0, 1);
                 grammarPizza.Append("i", 0, 1);
-                grammarPizza.Append(new SemanticResultKey("addons2", chAddons), 0, 3);
+                    grammarPizza.Append(new SemanticResultKey("dA2", chDouble), 0, 1);
+                    grammarPizza.Append(new SemanticResultKey("add2", chAddons), 0, 1);
                 grammarPizza.Append("i", 0, 1);
-                grammarPizza.Append(new SemanticResultKey("addons3", chAddons), 0, 3);
+                    grammarPizza.Append(new SemanticResultKey("dA3", chDouble), 0, 1);
+                    grammarPizza.Append(new SemanticResultKey("add3", chAddons), 0, 1);
+                grammarPizza.Append("i", 0, 1);
+                    grammarPizza.Append(new SemanticResultKey("dA4", chDouble), 0, 1);
+                    grammarPizza.Append(new SemanticResultKey("add4", chAddons), 0, 1);
+                grammarPizza.Append("i", 0, 1);
+                    grammarPizza.Append(new SemanticResultKey("dA5", chDouble), 0, 1);
+                    grammarPizza.Append(new SemanticResultKey("add5", chAddons), 0, 1);
 
 
                 Grammar g_Pizza = new Grammar(grammarPizza); 
 
                 pSRE.LoadGrammarAsync(g_Pizza);
-
-
-
+                               
                 pSRE.LoadGrammarAsync(grammarSystem);
                 // Ustaw rozpoznawanie przy wykorzystaniu wielu gramatyk:
                 pSRE.RecognizeAsync(RecognizeMode.Multiple);
-                // -------------------------------------------------------------------------
-                Console.WriteLine("\nAby zakonczyć działanie programu powiedz 'dziękuję'\n");
                 while (speechOn == true) {; } //pętla w celu uniknięcia zamknięcia programu
                 Console.WriteLine("\tWCIŚNIJ <ENTER> aby wyjść z programu\n");
                 Console.ReadLine();
-
-
+                
             }
             catch (Exception ex)
             {
@@ -169,71 +155,102 @@ namespace WpfApp1
             comments = String.Format("ROZPOZNANO (wiarygodność: {0:0.000}): '{1}'",
             e.Result.Confidence, txt);
             Console.WriteLine(comments);
-            if (confidence > 0.20)
+            if (confidence > 0.30)
             {
-                if (txt.IndexOf("Stop") >= 0)
-                {
+                if (txt.IndexOf("Stop") >= 0) {
                     speechOn = false;
                 }
-                else if (txt.IndexOf("Pomoc") >= 0)
-                {
-                    pTTS.SpeakAsync("Składnia polecenia: ...");
-
+                else if (txt.IndexOf("Pomoc") >= 0) {
+                    pTTS.SpeakAsync("Składnia polecenia: Poproszę... rozmiar pizzy, grubość ciasta, dodatki");
                 }
                 else if ((txt.IndexOf("Dziękuję") >= 0) && speechOn == true)
                 {
-                    oSize = oThick = oAdd = oAdd2 = oAdd3 = "";
+                    Console.WriteLine("oSize: " + oSize + " oThick: " + oThick + " Add: " + (dA1 ? " 2x" : " ") + oAdd1 + (dA2 ? " 2x" : " ") + oAdd2 +
+                                        (dA3 ? " 2x" : " ") + oAdd3 + (dA4 ? " 2x" : " ") + oAdd4 + (dA5 ? " 2x" : " ") + oAdd5); 
+                    pTTS.SpeakAsync("zamówiono " + oSize + " pizze " + oThick + " ciasto z: " + (dA1 ? " 2x" : " ") + oAdd1 + (dA2 ? " 2x" : " ") + oAdd2 +
+                                        (dA3 ? " 2x" : " ") + oAdd3 + (dA4 ? " 2x" : " ") + oAdd4 + (dA5 ? " 2x" : " ") + oAdd5);
+
                     this.Dispatcher.BeginInvoke(new Action(() => {
-                       // TODO: click() buttons according to order
+                        confirm_Click(null,null);
+                        clearForm();
                     }));
-                    Console.WriteLine("zamówiono ");
-                    //confirm_Click(null,null);
+
+                    oSize = oThick = oAdd1 = oAdd2 = oAdd3 = oAdd4 = oAdd5 = "";
+                    dA1 = dA2 = dA3 = dA4 = dA5 = false;
                 }
                 else if ((txt.IndexOf("Poproszę") >= 0) && speechOn == true)
                 {
-                    try
-                    {
+                    try {
                         oSize = (String)e.Result.Semantics["size"].Value;
+                        if (oSize != "") setSize(oSize);
                     }
                     catch (Exception ex) { }
 
-                    try
-                    {
+                    try {
                         oThick = (String)e.Result.Semantics["thickness"].Value;
+                        if (oThick!="") setThickness(oThick);
                     }
                     catch (Exception ex) { }
 
-                    try
-                    {
-                        oAdd = (String)e.Result.Semantics["addons"]?.Value;
+                    try {
+                        oAdd1 = (String)e.Result.Semantics["addons"].Value;
                         oAdd2 = (String)e.Result.Semantics["addons2"].Value;
                         oAdd3 = (String)e.Result.Semantics["addons3"].Value;
+                        oAdd4 = (String)e.Result.Semantics["addons4"].Value;
+                        oAdd5 = (String)e.Result.Semantics["addons5"].Value;
+
+                        if (e.Result.Semantics["dA1"].Value != null) dA1 = true;
+                        if (e.Result.Semantics["dA2"].Value != null) dA2 = true;
+                        if (e.Result.Semantics["dA3"].Value != null) dA3 = true;
+                        if (e.Result.Semantics["dA4"].Value != null) dA4 = true;
+                        if (e.Result.Semantics["dA5"].Value != null) dA5 = true;
+
+                        if (oAdd1 != "") setAdd(oAdd1, dA1);
+                        if (oAdd2 != "") setAdd(oAdd1, dA2);
+                        if (oAdd3 != "") setAdd(oAdd1, dA3);
+                        if (oAdd4 != "") setAdd(oAdd1, dA4);
+                        if (oAdd5 != "") setAdd(oAdd1, dA5);
                     }
                     catch (Exception ex) { }
-                    /*
-                    if (oThick.Length == 0){ //ask 
-                        pTTS.SpeakAsync("jaka grubość?");
-                        
-                    }*/
+                   
 
-                    this.Dispatcher.BeginInvoke(new Action(() => {
-                        
-                        // TODO: click() buttons according to order
-                    }));
+                    //this.Dispatcher.BeginInvoke(new Action(() => {
+                    //    TB1.Text = ("zamówiono " + oSize + " pizze " + oThick + " ciasto z: " + oAdd1 + ", " + oAdd2 + ", " + oAdd3 + ", " + oAdd4 + ", " + oAdd4);
+                    //}));
+                    
+                    Console.WriteLine("oSize: " + oSize + " oThick: " + oThick + " Add: " + (dA1?" 2x":" ") + oAdd1 + (dA2?" 2x" : " ") + oAdd2 +
+                                        (dA3?" 2x" : " ") + oAdd3 + (dA4?" 2x" : " ") + oAdd4 + (dA5?" 2x" : " ") + oAdd5 );
 
-
-                    Console.WriteLine("zamówiono " + oSize + " pizze " + oThick + " ciasto " + oAdd + " i " + oAdd2);
-                    pTTS.SpeakAsync("zamówiono " + oSize + " pizze " + oThick + " ciasto " + oAdd + " i " + oAdd2);
-                }
-                else if (true) // ask
-                {/*
-                    if (oSize == "")
+                    if (oSize.Equals(""))
                     {
-                        oSize = e.Result.Semantics["addons"]?.Value;
-                    }*/
+                        pTTS.SpeakAsync("jaki rozmiar pizzy? ");
+                    }
+                    else if (oThick.Equals(""))
+                    {
+                        pTTS.SpeakAsync("jaka grubość ciasta? ");
+                    }
+
                 }
+                else if ( speechOn == true ) // TODO
+                {
+                    if (oSize.Equals(""))
+                    {
+                        oSize = (String)e.Result.Semantics["size"].Value;
+                        if (oSize != "") setSize(oSize);
+                    }
+                    else
+                        if (oThick.Equals(""))
+                        {
+                        oThick = (String) e.Result.Semantics["thickness"].Value;
+                        if (oThick != "") setThickness(oThick);
+                    }
 
-
+                    if (oSize=="")                    
+                        pTTS.SpeakAsync("jaki rozmiar pizzy? ");                    
+                    else if (oThick=="")                    
+                        pTTS.SpeakAsync("jaka grubość ciasta? ");
+                    
+                } 
             }
             else
             {
@@ -244,27 +261,91 @@ namespace WpfApp1
 
         }
 
+        private void setSize(String size)
+        {
+            for (int i = 0; i < sizes.Length; i++)
+            {
+                if (size.Equals(size[i])) 
+                { 
+                    switch (i % sizesN)
+                    {
+                        case 0: s1_Click(null, null); break;
+                        case 1: s2_Click(null, null); break;
+                        case 2: s3_Click(null, null); break;
+                    }
+                break;
+                }
+            }
+        }
+        private void setThickness(String th)
+        {
+            for (int i = 0; i < thickness.Length; i++)
+            {
+                if (th.Equals(thickness[i]))
+                { 
+                    switch (i % thicknessN)
+                    {
+                        case 0: t1_Click(null, null); break;
+                        case 1: t2_Click(null, null); break;
+                        case 2: t3_Click(null, null); break;
+                    }
+                break;
+                }
+            }
+        }
+        private void setAdd(String add, bool x2)
+        {
+            for (int i = 0; i < addons.Length; i++)
+            {
+                if (add.Equals(addons[i]))
+                { 
+                    switch (i % addonsN)
+                    {
+                        case 0: if (x2) a11_Click(null, null); else a1_Click(null, null); break;
+                        case 1: if (x2) a22_Click(null, null); else a2_Click(null, null); break;
+                        case 2: if (x2) a33_Click(null, null); else a3_Click(null, null); break;
+                        case 3: if (x2) a44_Click(null, null); else a4_Click(null, null); break;
+                        case 4: if (x2) a55_Click(null, null); else a5_Click(null, null); break;
+                    }
+                break;
+                }
+            }
+        }
 
         private void confirm_Click(object sender, RoutedEventArgs e)
         {
-            pTTS.SpeakAsync("confirm");
-            //order confirmation
+            //pTTS.SpeakAsync("confirm");
+            SolidColorBrush bg = Brushes.LightGreen;
+            
+            String size = (s1.Background.Equals(bg) ? sizes[0] : "") + (s2.Background.Equals(bg) ? sizes[1] : "") + (s3.Background.Equals(bg) ? sizes[2] : "");
+            String thicknes = (t1.Background.Equals(bg) ? thickness[0] : "") + (t2.Background.Equals(bg) ? thickness[1] : "") + (t3.Background.Equals(bg) ? thickness[2]: "");
+            String add = (a1.Background.Equals(bg) ? addons[0] : "") + (a2.Background.Equals(bg) ? ","+addons[1] : "") + (a3.Background.Equals(bg) ? "," + addons[2] : "") + (a4.Background.Equals(bg) ? "," + addons[3] : "") + (a5.Background.Equals(bg) ? "," + addons[4] : "")+
+                        (a11.Background.Equals(bg) ? ",2x "+addons[0] : "") + (a22.Background.Equals(bg) ? ",2x "+addons[1] : "") + (a33.Background.Equals(bg) ? ",2x "+addons[2] : "") + (a44.Background.Equals(bg) ? ",2x "+addons[3] : "") + (a55.Background.Equals(bg) ? ",2x "+addons[4] : "");
+
+            clearForm(); 
+            TB1.Text = "Zamówiono: "+ size+" pizza, "+thicknes+" ciasto"+", dodatki: "+add;
         }
 
-        private void newOrder_Click(object sender, RoutedEventArgs e)
+        private void clearForm()
         {
-            pTTS.SpeakAsync("newOrder");
-            oSize = oThick = oAdd = oAdd2 = oAdd3= "";
-
             s1.IsEnabled = s2.IsEnabled = s3.IsEnabled = true;
             t1.IsEnabled = t2.IsEnabled = t3.IsEnabled = true;
             a1.IsEnabled = a2.IsEnabled = a3.IsEnabled = a4.IsEnabled = a5.IsEnabled = true;
             a11.IsEnabled = a22.IsEnabled = a33.IsEnabled = a44.IsEnabled = a55.IsEnabled = true;
-            
+
             s1.Background = s2.Background = s3.Background = Brushes.LightGray;
             t1.Background = t2.Background = t3.Background = Brushes.LightGray;
             a1.Background = a2.Background = a3.Background = a4.Background = a5.Background = Brushes.LightGray;
             a11.Background = a22.Background = a33.Background = a44.Background = a55.Background = Brushes.LightGray;
+        }
+
+        private void newOrder_Click(object sender, RoutedEventArgs e)
+        {
+            //pTTS.SpeakAsync("newOrder");
+            oSize = oThick = oAdd1 = oAdd2 = oAdd3 = oAdd4 = oAdd5 = "";
+            dA1 = dA2 = dA3 = dA4 = dA5 =false;
+            TB1.Text = "";
+            clearForm();
         }
 
         private void exit_Click(object sender, RoutedEventArgs e)

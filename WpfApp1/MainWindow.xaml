@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Pizzeria" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="17*"/>
@@ -14,16 +14,16 @@
         <Button x:Name="newOrder" Content="nowe zamówienie" HorizontalAlignment="Left" Margin="31,48,0,0" VerticalAlignment="Top" Width="130" Click="newOrder_Click" Height="20"/>
         <TextBlock HorizontalAlignment="Left" Margin="-49,26,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="16" Width="49"/>
         <Button x:Name="exit" Content="wyjście" HorizontalAlignment="Left" Margin="65,361,0,0" VerticalAlignment="Top" Width="75" Click="exit_Click"/>
-        <Button x:Name="confirm" Content="zatwierdź zamówienie" HorizontalAlignment="Left" Margin="31,128,0,0" VerticalAlignment="Top" Width="130" Click="confirm_Click"/>
-        <Button x:Name="s1" Content="mała" Grid.Column="1" HorizontalAlignment="Left" Margin="105,100,0,0" VerticalAlignment="Top" Width="75" Click="s1_Click"/>
-        <Button x:Name="s2" Content="średnia" Grid.Column="1" HorizontalAlignment="Left" Margin="206,100,0,0" VerticalAlignment="Top" Width="75" Click="s2_Click"/>
-        <Button x:Name="s3" Content="duża" Grid.Column="1" HorizontalAlignment="Left" Margin="307,100,0,0" VerticalAlignment="Top" Width="75" Click="s3_Click"/>
+        <Button x:Name="confirm" Content="zatwierdź zamówienie" HorizontalAlignment="Left" Margin="31,205,0,0" VerticalAlignment="Top" Width="130" Click="confirm_Click"/>
+        <Button x:Name="s1" Content="s1" Grid.Column="1" HorizontalAlignment="Left" Margin="105,100,0,0" VerticalAlignment="Top" Width="75" Click="s1_Click"/>
+        <Button x:Name="s2" Content="s2" Grid.Column="1" HorizontalAlignment="Left" Margin="206,100,0,0" VerticalAlignment="Top" Width="75" Click="s2_Click"/>
+        <Button x:Name="s3" Content="s3" Grid.Column="1" HorizontalAlignment="Left" Margin="307,100,0,0" VerticalAlignment="Top" Width="75" Click="s3_Click"/>
         <Label Content="rozmiar" Grid.Column="1" HorizontalAlignment="Left" Margin="36,97,0,0" VerticalAlignment="Top" Height="26" Width="69"/>
         <Label Content="ciasto" Grid.Column="1" HorizontalAlignment="Left" Margin="36,128,0,0" VerticalAlignment="Top" Height="26" Width="73"/>
         <Label Content="dodatki" Grid.Column="1" HorizontalAlignment="Left" Margin="36,159,0,0" VerticalAlignment="Top" Height="26" Width="78"/>
-        <Button x:Name="t1" Content="cienkie" Grid.Column="1" HorizontalAlignment="Left" Margin="105,128,0,0" VerticalAlignment="Top" Width="75" Click="t1_Click"/>
-        <Button x:Name="t2" Content="średnie" Grid.Column="1" HorizontalAlignment="Left" Margin="206,128,0,0" VerticalAlignment="Top" Width="75" Click="t2_Click"/>
-        <Button x:Name="t3" Content="grube" Grid.Column="1" HorizontalAlignment="Left" Margin="307,128,0,0" VerticalAlignment="Top" Width="75" Click="t3_Click"/>
+        <Button x:Name="t1" Content="t1" Grid.Column="1" HorizontalAlignment="Left" Margin="105,128,0,0" VerticalAlignment="Top" Width="75" Click="t1_Click"/>
+        <Button x:Name="t2" Content="t2" Grid.Column="1" HorizontalAlignment="Left" Margin="206,128,0,0" VerticalAlignment="Top" Width="75" Click="t2_Click"/>
+        <Button x:Name="t3" Content="t3" Grid.Column="1" HorizontalAlignment="Left" Margin="307,128,0,0" VerticalAlignment="Top" Width="75" Click="t3_Click"/>
         <Button x:Name="a1" Content="a1" Grid.Column="1" HorizontalAlignment="Left" Margin="105,162,0,0" VerticalAlignment="Top" Width="75" Click="a1_Click"/>
         <Button x:Name="a2" Content="a2" Grid.Column="1" HorizontalAlignment="Left" Margin="206,162,0,0" VerticalAlignment="Top" Width="75" Click="a2_Click"/>
         <Button x:Name="a3" Content="a3" Grid.Column="1" HorizontalAlignment="Left" Margin="307,162,0,0" VerticalAlignment="Top" Width="75" Click="a3_Click"/>
@@ -34,6 +34,8 @@
         <Button x:Name="a5" Content="a5" Grid.Column="1" HorizontalAlignment="Left" Margin="509,162,0,0" VerticalAlignment="Top" Width="75" Click="a5_Click"/>
         <Button x:Name="a44" Content="a44" Grid.Column="1" HorizontalAlignment="Left" Margin="408,200,0,0" VerticalAlignment="Top" Width="75" Click="a44_Click"/>
         <Button x:Name="a55" Content="a55" Grid.Column="1" HorizontalAlignment="Left" Margin="509,200,0,0" VerticalAlignment="Top" Width="75"  Click="a55_Click"/>
+        <TextBlock x:Name="TB1" Grid.Column="1" HorizontalAlignment="Left" Margin="105,295,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="49" Width="479"/>
+        <Label Content="KONFIGURATOR PIZZY" Grid.Column="1" HorizontalAlignment="Left" Margin="237,42,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>
