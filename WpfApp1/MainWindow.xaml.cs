@@ -162,131 +162,54 @@ namespace WpfApp1
             Console.WriteLine(comments);
             if (confidence > 0.30)
             {
-                if (txt.IndexOf("Stop") >= 0) {
+                if (txt.IndexOf("Stop") >= 0)
+                {
                     speechOn = false;
                 }
-                else if (txt.IndexOf("Pomoc") >= 0) {
+                else if (txt.IndexOf("Pomoc") >= 0)
+                {
                     pTTS.SpeakAsync("Składnia polecenia: Poproszę... rozmiar pizzy, grubość ciasta, dodatki");
                 }
-                else if ((txt.IndexOf("Dziękuję") >= 0) && speechOn == true)
-                {
-                    Console.WriteLine("oSize: " + oSize + " oThick: " + oThick + " Add: " + (dA1 ? " 2x" : " ") + oAdd1 + (dA2 ? " 2x" : " ") + oAdd2 +
-                                        (dA3 ? " 2x" : " ") + oAdd3 + (dA4 ? " 2x" : " ") + oAdd4 + (dA5 ? " 2x" : " ") + oAdd5); 
-                    pTTS.SpeakAsync("zamówiono " + oSize + " pizze " + oThick + " ciasto z " + (dA1 ? " 2x" : " ") + oAdd1 + (dA2 ? " 2x" : " ") + oAdd2 +
-                                        (dA3 ? " 2x" : " ") + oAdd3 + (dA4 ? " 2x" : " ") + oAdd4 + (dA5 ? " 2x" : " ") + oAdd5);
 
-                    this.Dispatcher.BeginInvoke(new Action(() => {
-                        confirm_Click(null,null);
-                        clearForm();
-                    }));
-
-                    oSize = oThick = oAdd1 = oAdd2 = oAdd3 = oAdd4 = oAdd5 = "";
-                    dA1 = dA2 = dA3 = dA4 = dA5 = false;
-                }
                 else if ((txt.IndexOf("Poproszę") >= 0) && speechOn == true)
                 {
-                    try
-                    {
-                        oSize = (String)e.Result.Semantics["size"].Value;
-                        if (oSize != "")
-                            this.Dispatcher.BeginInvoke(new Action(() => {
-                                setSize(oSize);
-                            }));
-                    }
-                    catch (Exception ex) { }
+                    this.Dispatcher.BeginInvoke(new Action(() =>{
+                        newOrder_Click(null, null);
+                    }));
 
-                    try {
-                        oThick = (String)e.Result.Semantics["thickness"].Value;
-                        if (oThick != "")
-                            this.Dispatcher.BeginInvoke(new Action(() => {
-                                setThickness(oThick);
-                            }));
-                    }
-                    catch (Exception ex) { }
+                    getPizzaSize(e);
+                    getPizzaThick(e);
+                    getPizzaAddons(e);
 
-                    try {
-                        oAdd1 = (String)e.Result.Semantics["add1"].Value;
-                        oAdd2 = (String)e.Result.Semantics["add2"].Value;
-                        oAdd3 = (String)e.Result.Semantics["add3"].Value;
-                        oAdd4 = (String)e.Result.Semantics["add4"].Value;
-                        oAdd5 = (String)e.Result.Semantics["add5"].Value;
-
-                        if (e.Result.Semantics["dA1"].Value != null) dA1 = true;
-                        if (e.Result.Semantics["dA2"].Value != null) dA2 = true;
-                        if (e.Result.Semantics["dA3"].Value != null) dA3 = true;
-                        if (e.Result.Semantics["dA4"].Value != null) dA4 = true;
-                        if (e.Result.Semantics["dA5"].Value != null) dA5 = true;
-
-                        //TODO
-                        if (oAdd1 != "") this.Dispatcher.BeginInvoke(new Action(() => {
-                            setAdd(oAdd1, dA1);
-                        }));
-                        if (oAdd2 != "") this.Dispatcher.BeginInvoke(new Action(() => {
-                            setAdd(oAdd1, dA2);
-                        }));
-                        if (oAdd3 != "") this.Dispatcher.BeginInvoke(new Action(() => {
-                            setAdd(oAdd1, dA3);
-                        }));
-                        if (oAdd4 != "") this.Dispatcher.BeginInvoke(new Action(() => {
-                            setAdd(oAdd1, dA4);
-                        }));
-                        if (oAdd5 != "") this.Dispatcher.BeginInvoke(new Action(() => {
-                            setAdd(oAdd1, dA5);
-                        }));
-
-                    }
-                    catch (Exception ex) { }
-                   
-
-                    //this.Dispatcher.BeginInvoke(new Action(() => {
-                    //    TB1.Text = ("zamówiono " + oSize + " pizze " + oThick + " ciasto z: " + oAdd1 + ", " + oAdd2 + ", " + oAdd3 + ", " + oAdd4 + ", " + oAdd4);
-                    //}));
-                    
-                    Console.WriteLine("oSize: " + oSize + " oThick: " + oThick + " Add: " + (dA1?" 2x":" ") + oAdd1 + (dA2?" 2x" : " ") + oAdd2 +
-                                        (dA3?" 2x" : " ") + oAdd3 + (dA4?" 2x" : " ") + oAdd4 + (dA5?" 2x" : " ") + oAdd5 );
+                    Console.WriteLine("oSize: " + oSize + " oThick: " + oThick + " Add: " + (dA1 ? " 2x" : " ") + oAdd1 + (dA2 ? " 2x" : " ") + oAdd2 +
+                                        (dA3 ? " 2x" : " ") + oAdd3 + (dA4 ? " 2x" : " ") + oAdd4 + (dA5 ? " 2x" : " ") + oAdd5);
 
                     if (oSize.Equals(""))
-                    {
                         pTTS.SpeakAsync("jaki rozmiar pizzy? ");
-                    }
                     else if (oThick.Equals(""))
-                    {
                         pTTS.SpeakAsync("jaka grubość ciasta? ");
-                    }
-
-                }
-                else if ( speechOn == true ) // TODO
-                {
-                    if (oSize.Equals(""))
-                    {
-                        try {
-                            oSize = (String) e.Result.Semantics["size"].Value;
-                            if (oSize != "")
-                                this.Dispatcher.BeginInvoke(new Action(() => {
-                                    setSize(oSize);
-                                }));
-                        }
-                        catch (Exception ex) { }
-                    }
+                    else if (oAdd1.Equals(""))
+                        pTTS.SpeakAsync("jakie dodatki? ");                    
                     else
-                        if (oThick.Equals(""))
-                        {
-                            try { 
-                                oThick = (String) e.Result.Semantics["thickness"].Value;
-                            if (oThick != "")
-                                this.Dispatcher.BeginInvoke(new Action(() =>
-                                {
-                                    setThickness(oThick);
-                                }));
-                            }
-                            catch (Exception ex) { }
-                    }
+                        doOrder();
+                }
+                else if (speechOn == true) 
+                {
+                    if (oSize == "")
+                        getPizzaSize(e);
+                    else if (oThick == "") 
+                        getPizzaThick(e);
+                    else if (oAdd1 == "")
+                        getPizzaAddons(e);
 
-                    if (oSize=="")                    
-                        pTTS.SpeakAsync("jaki rozmiar pizzy? ");                    
-                    else if (oThick=="")                    
+                    if (oSize == "")
+                        pTTS.SpeakAsync("jaki rozmiar pizzy? ");
+                    else if (oThick == "")
                         pTTS.SpeakAsync("jaka grubość ciasta? ");
-                    
+                    else if (oAdd1 == "")
+                        pTTS.SpeakAsync("jakie dodatki? ");
+                    else
+                        doOrder();
                 } 
             }
             else
@@ -296,6 +219,87 @@ namespace WpfApp1
                 pTTS.SpeakAsync("Proszę powtórzyć");
             }
 
+        }
+
+        private void getPizzaSize(SpeechRecognizedEventArgs e)
+        {
+            try
+            {
+                oSize = (String)e.Result.Semantics["size"].Value;
+                if (oSize != "")
+                    this.Dispatcher.BeginInvoke(new Action(() => {
+                        setSize(oSize);
+                    }));
+            }
+            catch (Exception ex) { }
+        }
+        private void getPizzaThick(SpeechRecognizedEventArgs e)
+        {
+            try { 
+                oThick = (String)e.Result.Semantics["thickness"].Value;
+                if (oThick != "")
+                    this.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        setThickness(oThick);
+                    }));
+            }
+            catch (Exception ex) { }
+        }
+        private void getPizzaAddons(SpeechRecognizedEventArgs e)
+        {
+            try
+            {
+                oAdd1 = (String)e.Result.Semantics["add1"].Value;
+                oAdd2 = (String)e.Result.Semantics["add2"].Value;
+                oAdd3 = (String)e.Result.Semantics["add3"].Value;
+                oAdd4 = (String)e.Result.Semantics["add4"].Value;
+                oAdd5 = (String)e.Result.Semantics["add5"].Value;
+
+                if (e.Result.Semantics["dA1"].Value != null) dA1 = true;
+                if (e.Result.Semantics["dA2"].Value != null) dA2 = true;
+                if (e.Result.Semantics["dA3"].Value != null) dA3 = true;
+                if (e.Result.Semantics["dA4"].Value != null) dA4 = true;
+                if (e.Result.Semantics["dA5"].Value != null) dA5 = true;
+
+                //TODO
+                this.Dispatcher.BeginInvoke(new Action(() => {
+                if (oAdd1 != "") 
+                    //this.Dispatcher.BeginInvoke(new Action(() =>{
+                    setAdd(oAdd1, dA1);
+                    //}));
+                if (oAdd2 != "") 
+                    //this.Dispatcher.BeginInvoke(new Action(() =>{
+                    setAdd(oAdd1, dA2);
+                    //}));
+                if (oAdd3 != "") 
+                    //this.Dispatcher.BeginInvoke(new Action(() =>{
+                    setAdd(oAdd1, dA3);
+                    //}));
+                if (oAdd4 != "") 
+                    //this.Dispatcher.BeginInvoke(new Action(() =>{
+                    setAdd(oAdd1, dA4);
+                    //}));
+                if (oAdd5 != "") 
+                    //this.Dispatcher.BeginInvoke(new Action(() =>{
+                    setAdd(oAdd1, dA5);
+                    //}));
+                }));
+
+            }
+            catch (Exception ex) { }
+        }
+
+        private void doOrder()
+        {
+            Console.WriteLine("oSize: " + oSize + " oThick: " + oThick + " Add: " + (dA1 ? " 2x" : " ") + oAdd1 + (dA2 ? " 2x" : " ") + oAdd2 +
+                                (dA3 ? " 2x" : " ") + oAdd3 + (dA4 ? " 2x" : " ") + oAdd4 + (dA5 ? " 2x" : " ") + oAdd5);
+            pTTS.SpeakAsync("zamówiono " + oSize + " pizze " + oThick + " ciasto z " + (dA1 ? " 2x" : " ") + oAdd1 + (dA2 ? " 2x" : " ") + oAdd2 +
+                                (dA3 ? " 2x" : " ") + oAdd3 + (dA4 ? " 2x" : " ") + oAdd4 + (dA5 ? " 2x" : " ") + oAdd5);
+
+            this.Dispatcher.BeginInvoke(new Action(() => {
+                confirm_Click(null, null);
+                clearForm();
+            }));
         }
 
         private void setSize(String si)
@@ -330,7 +334,7 @@ namespace WpfApp1
                 }
             }
         }
-        private void setAdd(String add, bool x2)
+        private void setAdd(String add, bool x2) //TODO fix
         {
             for (int i = 0; i < addons.Length; i++)
             {
@@ -380,7 +384,7 @@ namespace WpfApp1
         {
             //pTTS.SpeakAsync("newOrder");
             oSize = oThick = oAdd1 = oAdd2 = oAdd3 = oAdd4 = oAdd5 = "";
-            dA1 = dA2 = dA3 = dA4 = dA5 =false;
+            dA1 = dA2 = dA3 = dA4 = dA5 = false;
             TB1.Text = "";
             clearForm();
         }
