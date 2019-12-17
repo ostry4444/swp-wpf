@@ -269,19 +269,19 @@ namespace WpfApp1
                     //}));
                 if (oAdd2 != "") 
                     //this.Dispatcher.BeginInvoke(new Action(() =>{
-                    setAdd(oAdd1, dA2);
+                    setAdd(oAdd2, dA2);
                     //}));
                 if (oAdd3 != "") 
                     //this.Dispatcher.BeginInvoke(new Action(() =>{
-                    setAdd(oAdd1, dA3);
+                    setAdd(oAdd3, dA3);
                     //}));
                 if (oAdd4 != "") 
                     //this.Dispatcher.BeginInvoke(new Action(() =>{
-                    setAdd(oAdd1, dA4);
+                    setAdd(oAdd4, dA4);
                     //}));
                 if (oAdd5 != "") 
                     //this.Dispatcher.BeginInvoke(new Action(() =>{
-                    setAdd(oAdd1, dA5);
+                    setAdd(oAdd5, dA5);
                     //}));
                 }));
 
