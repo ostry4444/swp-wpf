@@ -173,7 +173,7 @@ namespace WpfApp1
 
                 else if ((txt.IndexOf("Poproszę") >= 0) && speechOn == true)
                 {
-                    this.Dispatcher.BeginInvoke(new Action(() =>{
+                    this.Dispatcher.BeginInvoke(new Action(() => {
                         newOrder_Click(null, null);
                     }));
 
@@ -247,46 +247,45 @@ namespace WpfApp1
         }
         private void getPizzaAddons(SpeechRecognizedEventArgs e)
         {
-            try
-            {
+            try{
                 oAdd1 = (String)e.Result.Semantics["add1"].Value;
-                oAdd2 = (String)e.Result.Semantics["add2"].Value;
-                oAdd3 = (String)e.Result.Semantics["add3"].Value;
-                oAdd4 = (String)e.Result.Semantics["add4"].Value;
-                oAdd5 = (String)e.Result.Semantics["add5"].Value;
-
                 if (e.Result.Semantics["dA1"].Value != null) dA1 = true;
-                if (e.Result.Semantics["dA2"].Value != null) dA2 = true;
-                if (e.Result.Semantics["dA3"].Value != null) dA3 = true;
-                if (e.Result.Semantics["dA4"].Value != null) dA4 = true;
-                if (e.Result.Semantics["dA5"].Value != null) dA5 = true;
-
-                //TODO
-                this.Dispatcher.BeginInvoke(new Action(() => {
-                if (oAdd1 != "") 
-                    //this.Dispatcher.BeginInvoke(new Action(() =>{
-                    setAdd(oAdd1, dA1);
-                    //}));
-                if (oAdd2 != "") 
-                    //this.Dispatcher.BeginInvoke(new Action(() =>{
-                    setAdd(oAdd2, dA2);
-                    //}));
-                if (oAdd3 != "") 
-                    //this.Dispatcher.BeginInvoke(new Action(() =>{
-                    setAdd(oAdd3, dA3);
-                    //}));
-                if (oAdd4 != "") 
-                    //this.Dispatcher.BeginInvoke(new Action(() =>{
-                    setAdd(oAdd4, dA4);
-                    //}));
-                if (oAdd5 != "") 
-                    //this.Dispatcher.BeginInvoke(new Action(() =>{
-                    setAdd(oAdd5, dA5);
-                    //}));
-                }));
-
+            }
+            catch (Exception ex) { }       
+            try{
+                oAdd2 = (String)e.Result.Semantics["add2"].Value;
+                    if (e.Result.Semantics["dA2"].Value != null) dA2 = true;
             }
             catch (Exception ex) { }
+            try{
+                oAdd3 = (String)e.Result.Semantics["add3"].Value;
+                    if (e.Result.Semantics["dA3"].Value != null) dA3 = true;
+            }
+            catch (Exception ex) { }
+            try { 
+                oAdd4 = (String)e.Result.Semantics["add4"].Value;
+                    if (e.Result.Semantics["dA4"].Value != null) dA4 = true;
+            }
+            catch (Exception ex) { }
+            try {
+                 oAdd5 = (String)e.Result.Semantics["add5"].Value;
+                    if (e.Result.Semantics["dA5"].Value != null) dA5 = true;
+            }
+            catch (Exception ex) { }
+
+                    this.Dispatcher.BeginInvoke(new Action(() => {
+            if (oAdd1 != "") 
+                setAdd(oAdd1, dA1);
+            if (oAdd2 != "") 
+                setAdd(oAdd2, dA2);
+            if (oAdd3 != "") 
+                setAdd(oAdd3, dA3);
+            if (oAdd4 != "") 
+                setAdd(oAdd4, dA4);
+            if (oAdd5 != "") 
+                setAdd(oAdd5, dA5);
+            }));
+
         }
 
         private void doOrder()
@@ -334,7 +333,7 @@ namespace WpfApp1
                 }
             }
         }
-        private void setAdd(String add, bool x2) //TODO fix
+        private void setAdd(String add, bool x2) 
         {
             for (int i = 0; i < addons.Length; i++)
             {
