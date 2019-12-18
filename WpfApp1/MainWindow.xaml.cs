@@ -184,32 +184,21 @@ namespace WpfApp1
                     Console.WriteLine("oSize: " + oSize + " oThick: " + oThick + " Add: " + (dA1 ? " 2x" : " ") + oAdd1 + (dA2 ? " 2x" : " ") + oAdd2 +
                                         (dA3 ? " 2x" : " ") + oAdd3 + (dA4 ? " 2x" : " ") + oAdd4 + (dA5 ? " 2x" : " ") + oAdd5);
 
-                    if (oSize.Equals(""))
-                        pTTS.SpeakAsync("jaki rozmiar pizzy? ");
-                    else if (oThick.Equals(""))
-                        pTTS.SpeakAsync("jaka grubość ciasta? ");
-                    else if (oAdd1.Equals(""))
-                        pTTS.SpeakAsync("jakie dodatki? ");                    
-                    else
-                        doOrder();
+                    refineOrder();
                 }
                 else if (speechOn == true) 
                 {
-                    if (oSize == "")
-                        getPizzaSize(e);
-                    else if (oThick == "") 
-                        getPizzaThick(e);
-                    else if (oAdd1 == "")
-                        getPizzaAddons(e);
+                    //if (oSize == "")
+                    //    getPizzaSize(e);
+                    //else if (oThick == "") 
+                    //    getPizzaThick(e);
+                    //else if (oAdd1 == "" && oAdd2 == "" && oAdd3 == "" && oAdd4 == "" && oAdd5 == "")
+                    //    getPizzaAddons(e);
+                    getPizzaSize(e);
+                    getPizzaThick(e);
+                    getPizzaAddons(e);
 
-                    if (oSize == "")
-                        pTTS.SpeakAsync("jaki rozmiar pizzy? ");
-                    else if (oThick == "")
-                        pTTS.SpeakAsync("jaka grubość ciasta? ");
-                    else if (oAdd1 == "")
-                        pTTS.SpeakAsync("jakie dodatki? ");
-                    else
-                        doOrder();
+                    refineOrder();
                 } 
             }
             else
@@ -219,6 +208,17 @@ namespace WpfApp1
                 pTTS.SpeakAsync("Proszę powtórzyć");
             }
 
+        }
+        private void refineOrder()
+        {
+            if (oSize.Equals(""))
+                pTTS.SpeakAsync("jaki rozmiar pizzy? ");
+            else if (oThick.Equals(""))
+                pTTS.SpeakAsync("jaka grubość ciasta? ");
+            else if (oAdd1 == "" && oAdd2 == "" && oAdd3 == "" && oAdd4 == "" && oAdd5 == "")
+                pTTS.SpeakAsync("jakie dodatki? ");
+            else
+                doOrder();
         }
 
         private void getPizzaSize(SpeechRecognizedEventArgs e)
